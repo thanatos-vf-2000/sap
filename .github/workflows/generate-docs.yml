@@ -13,9 +13,9 @@ jobs:
     - name: Set environment variables
       run: |
         echo "COL_NAME_PATH=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g')" >> $GITHUB_ENV
-        echo ${{ env.COL_NAME_PATH }}
+        echo $COL_NAME_PATH
         echo "COL_NAME=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g' | sed -e 's/\//\./g')" >> $GITHUB_ENV
-        echo ${{ env.COL_NAME }}
+        echo $COL_NAME
 
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -29,18 +29,19 @@ jobs:
       run: |
         sudo python3 -m pip install --upgrade pip
         sudo pip install antsibull
+        sudo pip install antsibull-docs
 
     - name: Generate Docs 1
       run: ansible-doc -l > documentation.txt # Génère la documentation et la stocke dans un fichier
     
     - name: Publish Docs to Wiki
       run: |
-        mkdir -p ~/.ansible/collections/ansible_collections/${{ env.COL_NAME_PATH }}
-        cp -R * ~/.ansible/collections/ansible_collections/${{ env.COL_NAME_PATH }}
-        cd ~/.ansible/collections/ansible_collections/${{ env.COL_NAME_PATH }}
+        mkdir -p ~/.ansible/collections/ansible_collections/$COL_NAME_PATH
+        cp -R * ~/.ansible/collections/ansible_collections/$COL_NAME_PATH
+        cd ~/.ansible/collections/ansible_collections/$COL_NAME_PATH
         mkdir -p ~/tmp/docs
         export ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections/ansible_collections
-        antsibull-docs sphinx-init --use-current --dest-dir ~/tmp/docs ${{ env.COL_NAME }}
+        antsibull-docs sphinx-init --use-current --dest-dir ~/tmp/docs $COL_NAME
         cd ~/tmp/docs
         pip install -r requirements.txt
         ./build.sh
