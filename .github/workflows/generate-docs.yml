@@ -12,9 +12,9 @@ jobs:
     steps:
     - name: Set environment variables
       run: |
-        echo "COL_NAME_PATH=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g'" >> $GITHUB_ENV
+        echo "COL_NAME_PATH=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g')" >> $GITHUB_ENV
         echo ${{ env.COL_NAME_PATH }}
-        echo "COL_NAME=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g' | sed -e 's/\//\./g'" >> $GITHUB_ENV
+        echo "COL_NAME=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g' | sed -e 's/\//\./g')" >> $GITHUB_ENV
         echo ${{ env.COL_NAME }}
 
     - name: Checkout repository
