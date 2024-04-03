@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set environment variables
+      run: |
+        echo "COL_NAME_PATH=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g'" >> $GITHUB_ENV
+        echo ${{ env.COL_NAME_PATH }}
+        echo "COL_NAME=$(echo ${GITHUB_REPOSITORY} | sed -e 's/-/_/g' | sed -e 's/\//\./g'" >> $GITHUB_ENV
+        echo ${{ env.COL_NAME }}
+
     - name: Checkout repository
       uses: actions/checkout@v2
 
@@ -17,11 +24,42 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y ansible
+    
+    - name: Install antsibull
+      run: |
+        sudo python3 -m pip install --upgrade pip
+        sudo pip install antsibull
 
-    - name: Generate Docs
+    - name: Generate Docs 1
       run: ansible-doc -l > documentation.txt # Génère la documentation et la stocke dans un fichier
+    
+    - name: Publish Docs to Wiki
+      run: |
+        mkdir -p ~/.ansible/collections/ansible_collections/${{ env.COL_NAME_PATH }}
+        cp -R * ~/.ansible/collections/ansible_collections/${{ env.COL_NAME_PATH }}
+        cd ~/.ansible/collections/ansible_collections/${{ env.COL_NAME_PATH }}
+        mkdir -p ~/tmp/docs
+        export ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections/ansible_collections
+        antsibull-docs sphinx-init --use-current --dest-dir ~/tmp/docs ${{ env.COL_NAME }}
+        cd ~/tmp/docs
+        pip install -r requirements.txt
+        ./build.sh
+
+
 
     - name: Publish Docs to Wiki
+      run: |
+        mkdir -p /tmp/docs
+        cp -R ~/tmp/docs/* /tmp/docs/
+        git clone https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/$CI_PROJECT_PATH.wiki.git /tmp/wiki
+        cp -Rp /tmp/docs/* /tmp/wiki/
+        cd /tmp/wiki
+        git add .
+        git commit -m "Update documentation"
+        git push origin main
+
+
+    - name: Publish Docs to gh-pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
