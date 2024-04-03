@@ -1,0 +1,28 @@
+name: Generate and Publish Docs
+
+on:
+  push:
+    branches:
+      - develop # ajustez cette branche selon votre configuration
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Ansible
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible
+
+    - name: Generate Docs
+      run: ansible-doc -l > documentation.txt # Génère la documentation et la stocke dans un fichier
+
+    - name: Publish Docs to Wiki
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs # Déclare le répertoire contenant la documentation à publier
