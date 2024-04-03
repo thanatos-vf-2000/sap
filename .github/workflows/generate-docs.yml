@@ -22,7 +22,9 @@ jobs:
 
     - name: Install Ansible
       run: |
+        sudo apt-add-repository --yes ppa:ansible/ansible
         sudo apt-get update
+        sudo apt-get -y upgrade
         sudo apt-get install -y ansible
     
     - name: Install antsibull
@@ -34,7 +36,7 @@ jobs:
     - name: Generate Docs 1
       run: ansible-doc -l > documentation.txt # Génère la documentation et la stocke dans un fichier
     
-    - name: Publish Docs to Wiki
+    - name: Generate Docs to Wiki
       run: |
         mkdir -p ~/.ansible/collections/ansible_collections/$COL_NAME_PATH
         cp -R * ~/.ansible/collections/ansible_collections/$COL_NAME_PATH
