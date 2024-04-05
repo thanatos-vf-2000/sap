@@ -1,0 +1,8 @@
+# Pycache directories and files
+**/__pycache__/
+.pytest_cache
+*.pyc
+
+# Distributable directories files
+*.tar.gz
+vendor/
