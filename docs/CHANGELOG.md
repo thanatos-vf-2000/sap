@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - N/A
 
 ### Added
-- module find_sap_apps for linux.
+- module find_sap_apps for linux,
+- module win_find_sap_apps for Windows.
 
 ### Security
 - N/A
