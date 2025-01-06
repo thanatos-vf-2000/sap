@@ -34,7 +34,7 @@ descriptions of our development workflows, please see our [contributing guide][c
 
 ## License
 
-Copyright (c) 2024 thanatos-vf-2000. All rights reserved.
+Copyright (c) 2025 thanatos-vf-2000. All rights reserved.
 
 Licensed under the GPL 3.0 or later; you may not use this file except in 
 compliance with the License. You may obtain a copy of the License at
